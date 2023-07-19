@@ -8,7 +8,6 @@
 constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
 const std::string kWindowTitle{"Toy ADV Engine"};
-const std::string kImagePath{"../assets/images/adv.jpg"};
 
 struct RenderData {
   SDL_Surface texture;
@@ -19,13 +18,13 @@ class Graphic {
  public:
   Graphic();
   ~Graphic();
+  void LoadBGTexture(const std::string path);
   void RenderBG();
   void Render(SDL_Surface* surface, SDL_Rect* rect);
   SDL_Rect GetTextBoxRect() const;
 
  private:
   void InitializeWindow();
-  void LoadBGTexture(const std::string path);
 
   SDL_Window* window_;
   SDL_Renderer* renderer_;

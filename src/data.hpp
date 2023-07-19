@@ -1,13 +1,22 @@
 #pragma once
 
+#include <vector>
+
 // sudo apt install nlohmann-json3-dev
 #include <nlohmann/json.hpp>
+
+struct GameScene {
+  std::string image;
+  std::string text;
+};
 
 class Data {
  public:
   Data(const std::string path);
-  ~Data();
+  nlohmann::json& GetGame();
+  std::vector<GameScene>& GetScenes();
 
  private:
   nlohmann::json game_;
+  std::vector<GameScene> scenes_;
 };

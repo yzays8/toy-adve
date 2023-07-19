@@ -8,14 +8,16 @@
 
 #include "text.hpp"
 #include "graphic.hpp"
+#include "data.hpp"
 
 class Engine {
  public:
   Engine();
   ~Engine();
-  void Run();
+  bool Run();
 
  private:
   std::shared_ptr<Graphic> graphic_;
   std::unique_ptr<Text> text_;
+  std::unique_ptr<Data> data_;
 };

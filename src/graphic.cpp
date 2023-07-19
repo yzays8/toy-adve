@@ -23,7 +23,6 @@ Graphic::Graphic()
   }
 
   InitializeWindow();
-  LoadBGTexture(kImagePath);
 }
 
 void Graphic::InitializeWindow() {

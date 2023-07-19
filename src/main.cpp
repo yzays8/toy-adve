@@ -10,5 +10,9 @@
 
 int main() {
   auto engine = std::make_unique<Engine>();
-  engine->Run();
+  bool success = engine->Run();
+  if (!success) {
+    std::cerr << "Exit with error" << std::endl;
+    return 1;
+  }
 }

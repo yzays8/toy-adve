@@ -43,19 +43,18 @@ void Text::RenderText(const std::string text) {
   std::thread thread = std::thread([this, &skip, &exit, &end] {
     while (!end) {
       SDL_Event event;
-      const Uint8* state = SDL_GetKeyboardState(nullptr);
       if (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-          end = true;
-          exit = true;
+        switch (event.type) {
+          case SDL_QUIT:
+            end = true;
+            exit = true;
+            break;
+          case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_RETURN) {
+              skip = true;
+            }
+            break;
         }
-      }
-      if (state[SDL_SCANCODE_ESCAPE]) {
-        end = true;
-        exit = true;
-      }
-      if (state[SDL_SCANCODE_RETURN]) {
-        skip = true;
       }
     }
   });
