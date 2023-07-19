@@ -18,7 +18,7 @@ void Engine::Run() {
   graphic_->RenderBG();
 
   // show text
-  const std::string t = R"(あいうえお Test test Test!!!!!!!)";
+  const std::string t = R"(あいうえお Test test Test!!!!!!!あいうえお Test test Test!!!!!!!)";
   text_->RenderText(t);
 
   // wait for next event
