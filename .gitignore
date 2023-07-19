@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+# Specific files
+/assets
+/backup
+/games
