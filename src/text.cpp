@@ -40,57 +40,57 @@ void Text::RenderText(const std::string text) {
   std::atomic_bool exit = false;
   std::atomic_bool end = false;
 
-  std::thread thread = std::thread([this, &skip, &exit, &end] {
-    while (!end) {
-      SDL_Event event;
-      if (SDL_PollEvent(&event)) {
-        switch (event.type) {
-          case SDL_QUIT:
-            end = true;
-            exit = true;
-            break;
-          case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_RETURN) {
-              skip = true;
-            }
-            break;
-        }
+  std::thread thread = std::thread([this, &text, &text_tmp, &skip, &exit, &end] {
+    // With UTF-8 the size of each character will vary depending on the character.
+    // This makes it difficult to calculate the position of the next character.
+    // Using UTF-16 when counting the number of characters and using UTF-8 when rendering text is a good way to avoid this problem.
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
+    for (auto& c : cv.from_bytes(text)) {
+      text_tmp += cv.to_bytes(c);
+      SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font_, text_tmp.c_str(), color_);
+      if (text_surface == nullptr) {
+        std::cerr << "Failed to create text surface: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        std::exit(EXIT_FAILURE);
       }
+      // decide the text position
+      SDL_Rect text_rect = {
+        graphic_->GetTextBoxRect().x + 30,
+        graphic_->GetTextBoxRect().y + 20,
+        text_surface->w,
+        text_surface->h
+      };
+      graphic_->Render(text_surface, &text_rect);
+
+      if (skip) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      } else {
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      }
+
+      if (exit) break;
     }
+
+    end = true;
   });
 
-  // With UTF-8 the size of each character will vary depending on the character.
-  // This makes it difficult to calculate the position of the next character.
-  // Using UTF-16 when counting the number of characters and using UTF-8 when rendering text is a good way to avoid this problem.
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
-  for (auto& c : cv.from_bytes(text)) {
-    text_tmp += cv.to_bytes(c);
-    SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font_, text_tmp.c_str(), color_);
-    if (text_surface == nullptr) {
-      std::cerr << "Failed to create text surface: " << SDL_GetError() << std::endl;
-      SDL_Quit();
-      std::exit(EXIT_FAILURE);
+  while (!end) {
+    SDL_Event event;
+    if (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_QUIT:
+          end = true;
+          exit = true;
+          break;
+        case SDL_KEYDOWN:
+          if (event.key.keysym.sym == SDLK_RETURN) {
+            skip = true;
+          }
+          break;
+      }
     }
-    // decide the text position
-    SDL_Rect text_rect = {
-      graphic_->GetTextBoxRect().x + 30,
-      graphic_->GetTextBoxRect().y + 20,
-      text_surface->w,
-      text_surface->h
-    };
-    graphic_->Render(text_surface, &text_rect);
-
-    if (skip) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    } else {
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-
-    if (exit) break;
   }
 
-  // TODO: Need to refactor
-  end = true;
   thread.join();
   if (exit) {
     std::cout << "Quit" << std::endl;
