@@ -12,7 +12,6 @@
 Text::Text(std::shared_ptr<Graphic> image)
     : graphic_{image},
       font_{nullptr},
-      renderer_{nullptr},
       color_{0, 0, 0, 255} {
   Initialize();
 }

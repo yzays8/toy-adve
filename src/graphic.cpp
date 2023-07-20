@@ -8,10 +8,7 @@ Graphic::Graphic()
     : bg_rect_{0, 0, kWindowWidth, kWindowHeight},
       textbox_rect_{80, kWindowHeight - 200, kWindowWidth - 160, 200},
       namebox_rect_{150, kWindowHeight - 245, 300, 40},
-      surface_{nullptr},
-      bg_texture_{nullptr},
-      txt_texture_{nullptr},
-      texture_{nullptr} {
+      bg_texture_{nullptr} {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
     std::exit(EXIT_FAILURE);
@@ -35,8 +32,7 @@ void Graphic::InitializeWindow() {
 }
 
 Graphic::~Graphic() {
-  SDL_DestroyTexture(texture_);
-  SDL_FreeSurface(surface_);
+  SDL_DestroyTexture(bg_texture_);
   SDL_DestroyRenderer(renderer_);
   SDL_DestroyWindow(window_);
 }
@@ -86,6 +82,7 @@ void Graphic::Render(SDL_Surface* surface, SDL_Rect* rect) {
 
   SetBG();
   SDL_RenderCopy(renderer_, text_texture, nullptr, rect);
+  SDL_DestroyTexture(text_texture);
   SDL_RenderPresent(renderer_);
 }
 

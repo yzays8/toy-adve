@@ -18,6 +18,5 @@ class Text {
  private:
   std::shared_ptr<Graphic> graphic_;
   TTF_Font* font_;
-  SDL_Renderer* renderer_;
   SDL_Color color_;
 };

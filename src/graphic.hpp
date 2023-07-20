@@ -32,8 +32,5 @@ class Graphic {
   SDL_Rect bg_rect_;
   SDL_Rect textbox_rect_;
   SDL_Rect namebox_rect_;
-  SDL_Surface* surface_;
   SDL_Texture* bg_texture_;
-  SDL_Texture* txt_texture_;
-  SDL_Texture* texture_;
 };
