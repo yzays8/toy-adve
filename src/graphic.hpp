@@ -9,11 +9,6 @@ constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
 const std::string kWindowTitle{"Toy ADV Engine"};
 
-struct RenderData {
-  SDL_Surface texture;
-  SDL_Rect rect;
-};
-
 class Graphic {
  public:
   Graphic();
