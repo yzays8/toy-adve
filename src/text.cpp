@@ -61,6 +61,8 @@ void Text::RenderText(const std::string text) {
         text_surface->h
       };
       graphic_->Render(text_surface, &text_rect);
+      SDL_FreeSurface(text_surface);
+      text_surface = nullptr;
 
       if (skip) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));

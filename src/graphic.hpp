@@ -25,6 +25,7 @@ class Graphic {
 
  private:
   void InitializeWindow();
+  void SetBG();
 
   SDL_Window* window_;
   SDL_Renderer* renderer_;

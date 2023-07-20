@@ -56,19 +56,23 @@ void Graphic::LoadBGTexture(const std::string path) {
   }
 }
 
-void Graphic::RenderBG() {
-  // Render background image
+void Graphic::SetBG() {
   SDL_RenderClear(renderer_);
+
+  // Set background image
   SDL_RenderCopy(renderer_, bg_texture_, nullptr, &bg_rect_);
 
-  // Render textbox
+  // Set textbox
   SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 150);
   SDL_RenderFillRect(renderer_, &textbox_rect_);
 
-  // Render namebox
+  // Set namebox
   SDL_RenderFillRect(renderer_, &namebox_rect_);
+}
 
+void Graphic::RenderBG() {
+  SetBG();
   SDL_RenderPresent(renderer_);
 }
 
@@ -79,7 +83,8 @@ void Graphic::Render(SDL_Surface* surface, SDL_Rect* rect) {
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
-  RenderBG();
+
+  SetBG();
   SDL_RenderCopy(renderer_, text_texture, nullptr, rect);
   SDL_RenderPresent(renderer_);
 }
