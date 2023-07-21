@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #include <chrono>
 #include <thread>
 #include <codecvt>
@@ -43,43 +45,55 @@ SDL_Surface Text::GetNameSurface(const std::string name, SDL_Color color) {
   return *name_surface;
 }
 
-void Text::RenderText(const std::string text) {
-  std::string text_tmp;
+void Text::RenderText(const std::vector<std::string> texts) {
   std::atomic_bool skip = false;
   std::atomic_bool exit = false;
   std::atomic_bool end = false;
 
-  std::thread thread = std::thread([this, &text, &text_tmp, &skip, &exit, &end] {
+  std::thread thread = std::thread([this, &texts, &skip, &exit, &end] {
+    std::vector<TextGraphic> data;
+
     // With UTF-8 the size of each character will vary depending on the character.
     // This makes it difficult to calculate the position of the next character.
     // Using UTF-16 when counting the number of characters and using UTF-8 when rendering text is a good way to avoid this problem.
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
-    for (auto& c : cv.from_bytes(text)) {
-      text_tmp += cv.to_bytes(c);
-      SDL_Surface* text_surface = TTF_RenderUTF8_Blended(font_, text_tmp.c_str(), color_);
-      if (text_surface == nullptr) {
-        std::cerr << "Failed to create text surface: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        std::exit(EXIT_FAILURE);
-      }
-      // decide the text position
-      SDL_Rect text_rect = {
-        graphic_->GetTextBoxRect().x + 30,
-        graphic_->GetTextBoxRect().y + 20,
-        text_surface->w,
-        text_surface->h
-      };
-      graphic_->Render(text_surface, &text_rect);
-      SDL_FreeSurface(text_surface);
-      text_surface = nullptr;
+    int i = 0;
+    for (auto& text: texts) {
+      SDL_Surface* text_surface;
+      SDL_Rect text_rect;
+      std::string text_tmp;
+      for (auto& c : cv.from_bytes(text)) {
+        text_tmp += cv.to_bytes(c);
+        text_surface = TTF_RenderUTF8_Blended(font_, text_tmp.c_str(), color_);
+        if (text_surface == nullptr) {
+          std::cerr << "Failed to create text surface: " << SDL_GetError() << std::endl;
+          SDL_Quit();
+          std::exit(EXIT_FAILURE);
+        }
 
-      if (skip) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-      } else {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      }
+        // decide the text position
+        text_rect = {
+          graphic_->GetTextBoxRect().x + 30,
+          graphic_->GetTextBoxRect().y + 20 + text_surface->h * i,
+          text_surface->w,
+          text_surface->h
+        };
+        data.push_back({text_surface, text_rect});
 
+        graphic_->RenderText(data);
+        data.pop_back();
+
+        if (skip) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        } else {
+          std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+
+        if (exit) break;
+      }
       if (exit) break;
+      data.push_back({text_surface, text_rect});  // add an entire text line
+      ++i;
     }
 
     end = true;

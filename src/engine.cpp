@@ -25,6 +25,7 @@ bool Engine::Run() {
     graphic_->RenderBG();
 
     // show text
+    //TODO: multiple lines
     text_->RenderText(scene.text);
 
     // wait for next event

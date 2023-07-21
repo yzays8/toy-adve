@@ -90,17 +90,20 @@ void Graphic::RenderBG() {
   SDL_RenderPresent(renderer_);
 }
 
-void Graphic::Render(SDL_Surface* surface, SDL_Rect* rect) {
-  SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer_, surface);
-  if (text_texture == nullptr) {
-    std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
-    SDL_Quit();
-    std::exit(EXIT_FAILURE);
+void Graphic::RenderText(std::vector<TextGraphic> all_lines) {
+  SetBG();
+
+  for (auto& line : all_lines) {
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer_, line.surface);
+    if (text_texture == nullptr) {
+      std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+      SDL_Quit();
+      std::exit(EXIT_FAILURE);
+    }
+    SDL_RenderCopy(renderer_, text_texture, nullptr, &line.rect);
+    SDL_DestroyTexture(text_texture);
   }
 
-  SetBG();
-  SDL_RenderCopy(renderer_, text_texture, nullptr, rect);
-  SDL_DestroyTexture(text_texture);
   SDL_RenderPresent(renderer_);
 }
 

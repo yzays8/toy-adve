@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <memory>
 #include <string>
 #include <SDL2/SDL_ttf.h>
@@ -13,7 +14,7 @@ class Text {
   Text(std::shared_ptr<Graphic> image);
   ~Text();
   void Initialize();
-  void RenderText(const std::string text);
+  void RenderText(const std::vector<std::string> texts);
   SDL_Surface GetNameSurface(const std::string name, SDL_Color color);
 
  private:

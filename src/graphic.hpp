@@ -8,6 +8,11 @@
 constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
 
+struct TextGraphic {
+  SDL_Surface* surface;
+  SDL_Rect rect;
+};
+
 class Graphic {
  public:
   Graphic();
@@ -16,7 +21,7 @@ class Graphic {
   void LoadBGTexture(const std::string path);
   void LoadNameTexture(SDL_Surface surface);
   void RenderBG();
-  void Render(SDL_Surface* surface, SDL_Rect* rect);
+  void RenderText(std::vector<TextGraphic>);
   SDL_Rect GetTextBoxRect() const;
 
  private:

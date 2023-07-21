@@ -21,11 +21,15 @@ Data::Data(const std::string path) {
 
   auto scenes = game_.at("game");
   for (auto& scene : scenes) {
-    scenes_.push_back({scene.at("image"), scene.at("speaker"), scene.at("text")});
+    GameScene tmp;
+    tmp.image = scene.at("image");
+    tmp.speaker = scene.at("speaker");
+    for (auto& text : scene.at("text")) {
+      tmp.text.push_back(text);
+    }
+    scenes_.push_back(tmp);
   }
-  for (auto& scene : scenes_) {
-    std::cout << scene.image << ": " << scene.text << std::endl;
-  }
+  std::cout << "Loaded " << scenes_.size() << " scenes" << std::endl;
 }
 
 nlohmann::json& Data::GetGame() {
