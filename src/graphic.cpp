@@ -18,17 +18,15 @@ Graphic::Graphic()
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
-
-  InitializeWindow();
 }
 
-void Graphic::InitializeWindow() {
+void Graphic::InitializeWindow(std::string window_title) {
   if (SDL_CreateWindowAndRenderer(kWindowWidth, kWindowHeight, 0, &window_, &renderer_) != 0) {
     std::cerr << "Failed to create SDL window or SDL renderer: " << SDL_GetError() << std::endl;
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
-  SDL_SetWindowTitle(window_, kWindowTitle.c_str());
+  SDL_SetWindowTitle(window_, window_title.c_str());
 }
 
 Graphic::~Graphic() {

@@ -14,9 +14,11 @@ class Data {
  public:
   Data(const std::string path);
   nlohmann::json& GetGame();
+  std::string GetTitle();
   std::vector<GameScene>& GetScenes();
 
  private:
   nlohmann::json game_;
+  std::string title_;
   std::vector<GameScene> scenes_;
 };

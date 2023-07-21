@@ -4,17 +4,20 @@
 #include "engine.hpp"
 #include "text.hpp"
 #include "graphic.hpp"
+#include "data.hpp"
 
 Engine::Engine()
-  : graphic_{std::make_shared<Graphic>()},
-    text_{std::make_unique<Text>(graphic_)},
-    data_{std::make_unique<Data>("../games/sample.json")} {}
+    : graphic_{std::make_shared<Graphic>()},
+      text_{std::make_unique<Text>(graphic_)},
+      data_{std::make_unique<Data>("../games/sample.json")} {}
 
 Engine::~Engine() {
   SDL_Quit();
 }
 
 bool Engine::Run() {
+  graphic_->InitializeWindow(data_->GetTitle());
+
   for (auto& scene : data_->GetScenes()) {
     // render background
     graphic_->LoadBGTexture(scene.image);

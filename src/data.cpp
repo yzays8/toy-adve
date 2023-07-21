@@ -7,7 +7,7 @@
 
 Data::Data(const std::string path) {
   if (!std::filesystem::is_regular_file(path)) {
-    std::cerr << "Failed to load game json file: " << path << std::endl;
+    std::cerr << path << "is not a regular file" << std::endl;
     std::exit(EXIT_FAILURE);
   }
   std::ifstream ifs(path, std::ios::in);
@@ -16,7 +16,8 @@ Data::Data(const std::string path) {
     std::exit(EXIT_FAILURE);
   }
   game_ = nlohmann::json::parse(ifs);
-  std::cout << "Loaded game json file: " << path << std::endl;
+
+  title_ = game_.at("title");
 
   auto scenes = game_.at("game");
   for (auto& scene : scenes) {
@@ -29,6 +30,10 @@ Data::Data(const std::string path) {
 
 nlohmann::json& Data::GetGame() {
   return game_;
+}
+
+std::string Data::GetTitle() {
+  return title_;
 }
 
 std::vector<GameScene>& Data::GetScenes() {

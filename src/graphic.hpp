@@ -7,19 +7,18 @@
 
 constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
-const std::string kWindowTitle{"Toy ADV Engine"};
 
 class Graphic {
  public:
   Graphic();
   ~Graphic();
+  void InitializeWindow(std::string window_title);
   void LoadBGTexture(const std::string path);
   void RenderBG();
   void Render(SDL_Surface* surface, SDL_Rect* rect);
   SDL_Rect GetTextBoxRect() const;
 
  private:
-  void InitializeWindow();
   void SetBG();
 
   SDL_Window* window_;
