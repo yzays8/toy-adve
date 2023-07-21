@@ -21,6 +21,7 @@ bool Engine::Run() {
   for (auto& scene : data_->GetScenes()) {
     // render background
     graphic_->LoadBGTexture(scene.image);
+    graphic_->LoadNameTexture(text_->GetNameSurface(scene.speaker, {0, 0, 255, 255}));
     graphic_->RenderBG();
 
     // show text

@@ -14,6 +14,7 @@ class Text {
   ~Text();
   void Initialize();
   void RenderText(const std::string text);
+  SDL_Surface GetNameSurface(const std::string name, SDL_Color color);
 
  private:
   std::shared_ptr<Graphic> graphic_;

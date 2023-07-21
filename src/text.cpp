@@ -33,6 +33,16 @@ void Text::Initialize() {
   }
 }
 
+SDL_Surface Text::GetNameSurface(const std::string name, SDL_Color color) {
+  SDL_Surface* name_surface = TTF_RenderUTF8_Blended(font_, name.c_str(), color);
+  if (name_surface == nullptr) {
+    std::cerr << "Failed to create name surface: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    std::exit(EXIT_FAILURE);
+  }
+  return *name_surface;
+}
+
 void Text::RenderText(const std::string text) {
   std::string text_tmp;
   std::atomic_bool skip = false;

@@ -7,6 +7,7 @@
 
 struct GameScene {
   std::string image;
+  std::string speaker;
   std::string text;
 };
 

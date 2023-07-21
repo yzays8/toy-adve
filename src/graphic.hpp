@@ -14,6 +14,7 @@ class Graphic {
   ~Graphic();
   void InitializeWindow(std::string window_title);
   void LoadBGTexture(const std::string path);
+  void LoadNameTexture(SDL_Surface surface);
   void RenderBG();
   void Render(SDL_Surface* surface, SDL_Rect* rect);
   SDL_Rect GetTextBoxRect() const;
@@ -26,5 +27,7 @@ class Graphic {
   SDL_Rect bg_rect_;
   SDL_Rect textbox_rect_;
   SDL_Rect namebox_rect_;
+  SDL_Rect name_rect_;
   SDL_Texture* bg_texture_;
+  SDL_Texture* name_texture_;
 };

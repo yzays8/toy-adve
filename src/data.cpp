@@ -21,7 +21,7 @@ Data::Data(const std::string path) {
 
   auto scenes = game_.at("game");
   for (auto& scene : scenes) {
-    scenes_.push_back({scene.at("image"), scene.at("text")});
+    scenes_.push_back({scene.at("image"), scene.at("speaker"), scene.at("text")});
   }
   for (auto& scene : scenes_) {
     std::cout << scene.image << ": " << scene.text << std::endl;
