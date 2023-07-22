@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -106,6 +107,44 @@ void Graphic::RenderText(std::vector<TextGraphic> all_lines) {
     }
     SDL_RenderCopy(renderer_, text_texture, nullptr, &line.rect);
     SDL_DestroyTexture(text_texture);
+  }
+
+  SDL_RenderPresent(renderer_);
+}
+
+SDL_Texture* Graphic::CreateCurrentTexture() {
+  std::unique_ptr<Uint32> pixels{new Uint32[kWindowWidth * kWindowHeight]};
+  SDL_RenderReadPixels(renderer_, nullptr, SDL_PIXELFORMAT_RGBA8888, pixels.get(), kWindowWidth * sizeof(Uint32));
+  SDL_Texture* texture = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, kWindowWidth, kWindowHeight);
+  if (texture == nullptr) {
+    std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    std::exit(EXIT_FAILURE);
+  }
+  int error = SDL_UpdateTexture(texture, nullptr, pixels.get(), kWindowWidth * sizeof(Uint32));
+  if (error) {
+    std::cerr << "Failed to update texture: " << SDL_GetError() << std::endl;
+    SDL_Quit();
+    std::exit(EXIT_FAILURE);
+  }
+  return texture;
+}
+
+void Graphic::RenderTriangle(SDL_Texture* base_texture, bool render_triangle) {
+  SDL_RenderCopy(renderer_, base_texture, nullptr, nullptr);
+
+  if (render_triangle) {
+    int x1 = textbox_rect_.x + textbox_rect_.w / 2 - 10;
+    int y1 = textbox_rect_.y + textbox_rect_.h - 20;
+    int x2 = textbox_rect_.x + textbox_rect_.w / 2 + 10;
+    int y2 = textbox_rect_.y + textbox_rect_.h - 20;
+    int x3 = textbox_rect_.x + textbox_rect_.w / 2;
+    int y3 = textbox_rect_.y + textbox_rect_.h;
+
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer_, x1, y1, x2, y2);
+    SDL_RenderDrawLine(renderer_, x2, y2, x3, y3);
+    SDL_RenderDrawLine(renderer_, x3, y3, x1, y1);
   }
 
   SDL_RenderPresent(renderer_);

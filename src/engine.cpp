@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include "engine.hpp"
 #include "text.hpp"
@@ -27,24 +28,47 @@ bool Engine::Run() {
     // show text
     text_->RenderText(scene.text);
 
+    // blink triangle
+    std::atomic_bool end_of_thread = false;
+    std::thread th_triangle = std::thread([this, &end_of_thread]() {
+      SDL_Texture* base_texture = graphic_->CreateCurrentTexture();
+      auto wait_for_10Xms = [&end_of_thread](int x) {
+        for (int i = 0; i < x; ++i) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(10));
+          if (end_of_thread) break;
+        }
+      };
+      while (!end_of_thread) {
+        graphic_->RenderTriangle(base_texture, true);
+        wait_for_10Xms(50);
+        graphic_->RenderTriangle(base_texture, false);
+        wait_for_10Xms(50);
+      }
+      SDL_DestroyTexture(base_texture);
+    });
+
     // wait for next event
-    bool next = false;
+    bool move_to_next = false;
     for (;;) {
       SDL_Event event;
       if (SDL_PollEvent(&event)) {
         switch (event.type) {
           case SDL_QUIT:
             std::cout << "Quit" << std::endl;
+            end_of_thread = true;
+            th_triangle.join();
             return true;
           case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_RETURN) {
-              next = true;
+              move_to_next = true;
+              end_of_thread = true;
+              th_triangle.join();
             }
             break;
         }
       }
 
-      if (next) break;
+      if (move_to_next) break;
     }
   }
 

@@ -22,6 +22,8 @@ class Graphic {
   void LoadNameTexture(SDL_Surface surface);
   void RenderBG();
   void RenderText(std::vector<TextGraphic>);
+  void RenderTriangle(SDL_Texture* base_texture, bool render_triangle);
+  SDL_Texture* CreateCurrentTexture();
   SDL_Rect GetTextBoxRect() const;
 
  private:
