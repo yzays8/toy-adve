@@ -29,6 +29,10 @@ void Graphic::InitializeWindow(std::string window_title) {
     std::exit(EXIT_FAILURE);
   }
   SDL_SetWindowTitle(window_, window_title.c_str());
+
+  // fix window size
+  SDL_SetWindowMaximumSize(window_, kWindowWidth, kWindowHeight);
+  SDL_SetWindowMinimumSize(window_, kWindowWidth, kWindowHeight);
 }
 
 Graphic::~Graphic() {
