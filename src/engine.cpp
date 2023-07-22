@@ -32,7 +32,7 @@ bool Engine::Run() {
     std::atomic_bool end_of_thread = false;
     std::thread th_triangle = std::thread([this, &end_of_thread]() {
       SDL_Texture* base_texture = graphic_->CreateCurrentTexture();
-      auto wait_for_10Xms = [&end_of_thread](int x) {
+      auto sleep_for_10Xms = [&end_of_thread](int x) {
         for (int i = 0; i < x; ++i) {
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
           if (end_of_thread) break;
@@ -40,9 +40,9 @@ bool Engine::Run() {
       };
       while (!end_of_thread) {
         graphic_->RenderTriangle(base_texture, true);
-        wait_for_10Xms(50);
+        sleep_for_10Xms(50);
         graphic_->RenderTriangle(base_texture, false);
-        wait_for_10Xms(50);
+        sleep_for_10Xms(50);
       }
       SDL_DestroyTexture(base_texture);
     });
