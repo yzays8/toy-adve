@@ -7,13 +7,11 @@
 
 #include "graphic.hpp"
 
-const std::string kFontPath{"../assets/fonts/SourceHanSansHW-VF.ttf"};
-
 class Text {
  public:
-  Text(std::shared_ptr<Graphic> image);
+  Text(std::shared_ptr<Graphic> image, std::string font_path);
   ~Text();
-  void Initialize();
+  void Initialize(std::string font_path);
   void RenderText(const std::vector<std::string> texts);
   SDL_Surface GetNameSurface(const std::string name, SDL_Color color);
 

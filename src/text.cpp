@@ -11,23 +11,23 @@
 
 #include "text.hpp"
 
-Text::Text(std::shared_ptr<Graphic> image)
+Text::Text(std::shared_ptr<Graphic> image, std::string font_path)
     : graphic_{image},
       font_{nullptr},
       color_{0, 0, 0, 255} {
-  Initialize();
+  Initialize(font_path);
 }
 
 Text::~Text() {
   TTF_CloseFont(font_);
 }
 
-void Text::Initialize() {
+void Text::Initialize(std::string font_path) {
   if (TTF_Init() != 0) {
     std::cerr << "TTF_Init Error: " << TTF_GetError() << std::endl;
     std::exit(EXIT_FAILURE);
   }
-  font_ = TTF_OpenFont(kFontPath.c_str(), 24);
+  font_ = TTF_OpenFont(font_path.c_str(), 24);
   if (font_ == nullptr) {
     std::cerr << "Failed to load font: " << SDL_GetError() << std::endl;
     SDL_Quit();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <memory>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -12,12 +13,12 @@
 
 class Engine {
  public:
-  Engine();
+  Engine(std::string game);
   ~Engine();
   bool Run();
 
  private:
+  std::unique_ptr<Data> data_;
   std::shared_ptr<Graphic> graphic_;
   std::unique_ptr<Text> text_;
-  std::unique_ptr<Data> data_;
 };

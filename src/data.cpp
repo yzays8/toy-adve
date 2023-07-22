@@ -5,12 +5,14 @@
 
 #include "data.hpp"
 
+namespace fs = std::filesystem;
+
 Data::Data(const std::string path) {
-  if (!std::filesystem::is_regular_file(path)) {
-    std::cerr << path << "is not a regular file" << std::endl;
+  if (!fs::is_regular_file(path)) {
+    std::cerr << path << " is not a regular file" << std::endl;
     std::exit(EXIT_FAILURE);
   }
-  std::ifstream ifs(path, std::ios::in);
+  std::ifstream ifs{path, std::ios::in};
   if (!ifs.is_open()) {
     std::cout << "Failed to open game json file: " << path << std::endl;
     std::exit(EXIT_FAILURE);
@@ -19,10 +21,15 @@ Data::Data(const std::string path) {
 
   title_ = game_.at("title");
 
-  auto scenes = game_.at("game");
+  fs::path dir_path{path};
+  fs::path tmp_path = game_.at("font");
+  font_ = dir_path.remove_filename() / tmp_path;
+
+  auto scenes = game_.at("scenes");
   for (auto& scene : scenes) {
     GameScene tmp;
-    tmp.image = scene.at("image");
+    fs::path tmp_path = scene.at("image");
+    tmp.image = dir_path.remove_filename() / tmp_path;
     tmp.speaker = scene.at("speaker");
     for (auto& text : scene.at("text")) {
       tmp.text.push_back(text);
@@ -32,12 +39,12 @@ Data::Data(const std::string path) {
   std::cout << "Loaded " << scenes_.size() << " scenes" << std::endl;
 }
 
-nlohmann::json& Data::GetGame() {
-  return game_;
+std::string Data::GetTitle() const {
+  return title_;
 }
 
-std::string Data::GetTitle() {
-  return title_;
+std::string Data::GetFont() const {
+  return font_;
 }
 
 std::vector<GameScene>& Data::GetScenes() {

@@ -6,10 +6,10 @@
 #include "graphic.hpp"
 #include "data.hpp"
 
-Engine::Engine()
-    : graphic_{std::make_shared<Graphic>()},
-      text_{std::make_unique<Text>(graphic_)},
-      data_{std::make_unique<Data>("../games/sample.json")} {}
+Engine::Engine(std::string game)
+    : data_{std::make_unique<Data>(game)},
+      graphic_{std::make_shared<Graphic>()},
+      text_{std::make_unique<Text>(graphic_, data_->GetFont())} {}
 
 Engine::~Engine() {
   SDL_Quit();
