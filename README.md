@@ -6,9 +6,9 @@ This is a toy ADV (adventure game) engine. Game title, font, images and scripts 
 
 ## Requirements
 
-### Debian (Ubuntu)
-
 SDL2 and [JSON for Modern C++](https://github.com/nlohmann/json) are required.
+
+### Debian (Ubuntu)
 
 ```sh
 sudo apt install libsdl2-dev
