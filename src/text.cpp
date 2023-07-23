@@ -48,9 +48,9 @@ SDL_Surface* Text::GetNameSurface(const std::string name, SDL_Color color) {
 void Text::RenderText(const std::vector<std::string> texts) {
   std::atomic_bool skip = false;
   std::atomic_bool exit = false;
-  std::atomic_bool end = false;
+  std::atomic_bool end_rendering = false;
 
-  std::thread thread = std::thread([this, &texts, &skip, &exit, &end] {
+  std::thread thread = std::thread([this, &texts, &skip, &exit, &end_rendering] {
     std::vector<TextGraphic> data;
 
     // With UTF-8 the size of each character will vary depending on the character.
@@ -100,15 +100,15 @@ void Text::RenderText(const std::vector<std::string> texts) {
       SDL_FreeSurface(text.surface);
     }
 
-    end = true;
+    end_rendering = true;
   });
 
-  while (!end) {
+  while (!end_rendering) {
     SDL_Event event;
     if (SDL_PollEvent(&event)) {
       switch (event.type) {
         case SDL_QUIT:
-          end = true;
+          end_rendering = true;
           exit = true;
           break;
         case SDL_KEYDOWN:
