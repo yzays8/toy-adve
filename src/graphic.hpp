@@ -21,6 +21,7 @@ class Graphic {
   void LoadBGTexture(const std::string path);
   void LoadNameTexture(SDL_Surface* surface);
   void RenderBG();
+  void RenderOnlyBGTexture();
   void RenderText(std::vector<TextGraphic>);
   void RenderTriangle(SDL_Texture* base_texture, bool render_triangle);
   SDL_Texture* CreateCurrentTexture();

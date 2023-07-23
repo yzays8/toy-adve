@@ -30,12 +30,18 @@ bool Engine::Run() {
 
     // blink triangle
     std::atomic_bool end_of_thread = false;
-    std::thread th_triangle = std::thread([this, &end_of_thread]() {
+    std::atomic_bool show_bg_image = false;
+    std::thread th_triangle = std::thread([this, &end_of_thread, &show_bg_image]() {
       SDL_Texture* base_texture = graphic_->CreateCurrentTexture();
-      auto sleep_for_10Xms = [&end_of_thread](int x) {
+      auto sleep_for_10Xms = [this, &end_of_thread, &show_bg_image](int x) {
         for (int i = 0; i < x; ++i) {
           std::this_thread::sleep_for(std::chrono::milliseconds(10));
-          if (end_of_thread) break;
+          if (end_of_thread) {
+            break;
+          } else if (show_bg_image) {
+            this->graphic_->RenderOnlyBGTexture();
+            while(show_bg_image && !end_of_thread);
+          }
         }
       };
       while (!end_of_thread) {
@@ -59,10 +65,15 @@ bool Engine::Run() {
             th_triangle.join();
             return true;
           case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_RETURN) {
-              move_to_next = true;
-              end_of_thread = true;
-              th_triangle.join();
+            switch (event.key.keysym.sym) {
+              case SDLK_RETURN:
+                move_to_next = true;
+                end_of_thread = true;
+                th_triangle.join();
+                break;
+              case SDLK_SPACE:
+                show_bg_image = !show_bg_image;
+                break;
             }
             break;
         }

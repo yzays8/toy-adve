@@ -97,6 +97,12 @@ void Graphic::RenderBG() {
   SDL_RenderPresent(renderer_);
 }
 
+void Graphic::RenderOnlyBGTexture() {
+  SDL_RenderClear(renderer_);
+  SDL_RenderCopy(renderer_, bg_texture_, nullptr, nullptr);
+  SDL_RenderPresent(renderer_);
+}
+
 void Graphic::RenderText(std::vector<TextGraphic> all_lines) {
   SetBG();
 
