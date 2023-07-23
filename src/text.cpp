@@ -46,11 +46,11 @@ SDL_Surface* Text::GetNameSurface(const std::string name, SDL_Color color) {
 }
 
 void Text::RenderText(const std::vector<std::string> texts) {
-  std::atomic_bool skip = false;
+  std::atomic_bool fast_forward = false;
   std::atomic_bool exit = false;
   std::atomic_bool end_rendering = false;
 
-  std::thread thread = std::thread([this, &texts, &skip, &exit, &end_rendering] {
+  std::thread th_rendering_text = std::thread([this, &texts, &fast_forward, &exit, &end_rendering] {
     std::vector<TextGraphic> data;
 
     // With UTF-8 the size of each character will vary depending on the character.
@@ -83,7 +83,7 @@ void Text::RenderText(const std::vector<std::string> texts) {
         graphic_->RenderText(data);
         data.pop_back();
 
-        if (skip) {
+        if (fast_forward) {
           std::this_thread::sleep_for(std::chrono::milliseconds(1));
         } else {
           std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -113,14 +113,14 @@ void Text::RenderText(const std::vector<std::string> texts) {
           break;
         case SDL_KEYDOWN:
           if (event.key.keysym.sym == SDLK_RETURN) {
-            skip = true;
+            fast_forward = true;
           }
           break;
       }
     }
   }
 
-  thread.join();
+  th_rendering_text.join();
   if (exit) {
     std::cout << "Quit" << std::endl;
     SDL_Quit();
