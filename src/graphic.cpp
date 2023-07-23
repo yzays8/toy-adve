@@ -37,6 +37,7 @@ void Graphic::InitializeWindow(std::string window_title) {
 }
 
 Graphic::~Graphic() {
+  SDL_DestroyTexture(name_texture_);
   SDL_DestroyTexture(bg_texture_);
   SDL_DestroyRenderer(renderer_);
   SDL_DestroyWindow(window_);
@@ -55,20 +56,21 @@ void Graphic::LoadBGTexture(const std::string path) {
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
+  SDL_FreeSurface(surface);
 }
 
-void Graphic::LoadNameTexture(SDL_Surface surface) {
-  name_texture_ = SDL_CreateTextureFromSurface(renderer_, &surface);
+void Graphic::LoadNameTexture(SDL_Surface* surface) {
+  name_texture_ = SDL_CreateTextureFromSurface(renderer_, surface);
   if (name_texture_ == nullptr) {
     std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
   name_rect_ = {
-    namebox_rect_.x + (namebox_rect_.w - surface.w) / 2,
-    namebox_rect_.y + (namebox_rect_.h - surface.h) / 2,
-    surface.w,
-    surface.h
+    namebox_rect_.x + (namebox_rect_.w - surface->w) / 2,
+    namebox_rect_.y + (namebox_rect_.h - surface->h) / 2,
+    surface->w,
+    surface->h
   };
 }
 
@@ -131,6 +133,7 @@ SDL_Texture* Graphic::CreateCurrentTexture() {
 }
 
 void Graphic::RenderTriangle(SDL_Texture* base_texture, bool render_triangle) {
+  SDL_RenderClear(renderer_);
   SDL_RenderCopy(renderer_, base_texture, nullptr, nullptr);
 
   if (render_triangle) {

@@ -13,7 +13,7 @@ class Text {
   ~Text();
   void Initialize(std::string font_path);
   void RenderText(const std::vector<std::string> texts);
-  SDL_Surface GetNameSurface(const std::string name, SDL_Color color);
+  SDL_Surface* GetNameSurface(const std::string name, SDL_Color color);
 
  private:
   std::shared_ptr<Graphic> graphic_;

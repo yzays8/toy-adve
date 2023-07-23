@@ -19,7 +19,7 @@ class Graphic {
   ~Graphic();
   void InitializeWindow(std::string window_title);
   void LoadBGTexture(const std::string path);
-  void LoadNameTexture(SDL_Surface surface);
+  void LoadNameTexture(SDL_Surface* surface);
   void RenderBG();
   void RenderText(std::vector<TextGraphic>);
   void RenderTriangle(SDL_Texture* base_texture, bool render_triangle);

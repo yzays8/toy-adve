@@ -35,14 +35,14 @@ void Text::Initialize(std::string font_path) {
   }
 }
 
-SDL_Surface Text::GetNameSurface(const std::string name, SDL_Color color) {
+SDL_Surface* Text::GetNameSurface(const std::string name, SDL_Color color) {
   SDL_Surface* name_surface = TTF_RenderUTF8_Blended(font_, name.c_str(), color);
   if (name_surface == nullptr) {
     std::cerr << "Failed to create name surface: " << SDL_GetError() << std::endl;
     SDL_Quit();
     std::exit(EXIT_FAILURE);
   }
-  return *name_surface;
+  return name_surface;
 }
 
 void Text::RenderText(const std::vector<std::string> texts) {
@@ -94,6 +94,10 @@ void Text::RenderText(const std::vector<std::string> texts) {
       if (exit) break;
       data.push_back({text_surface, text_rect});  // add an entire text line
       ++i;
+    }
+
+    for (auto& text : data) {
+      SDL_FreeSurface(text.surface);
     }
 
     end = true;
