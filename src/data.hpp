@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-
-// sudo apt install nlohmann-json3-dev
 #include <nlohmann/json.hpp>
 
 struct GameScene {
