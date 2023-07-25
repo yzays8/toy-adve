@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <SDL2/SDL.h>
 
 #include "engine.hpp"
 #include "text.hpp"
