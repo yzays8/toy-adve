@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a toy ADV (adventure game) engine. Game title, font, images and scripts can be specified in JSON file.
+This is a toy ADV (adventure game) engine. Game title, font, images, audios and scripts can be specified in JSON file.
 
 ## Requirements
 
