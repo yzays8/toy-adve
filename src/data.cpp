@@ -28,8 +28,13 @@ Data::Data(const std::string path) {
   auto scenes = game_.at("scenes");
   for (auto& scene : scenes) {
     GameScene tmp;
-    fs::path tmp_path = scene.at("image");
-    tmp.image = dir_path.remove_filename() / tmp_path;
+
+    fs::path tmp_img_path = scene.at("image");
+    tmp.image = dir_path.remove_filename() / tmp_img_path;
+
+    fs::path tmp_sound_path = scene.at("music");
+    tmp.sound = dir_path.remove_filename() / tmp_sound_path;
+
     tmp.speaker = scene.at("speaker");
     for (auto& text : scene.at("text")) {
       tmp.text.push_back(text);

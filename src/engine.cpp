@@ -7,11 +7,13 @@
 #include "text.hpp"
 #include "graphic.hpp"
 #include "data.hpp"
+#include "sound.hpp"
 
 Engine::Engine(std::string game)
     : data_{std::make_unique<Data>(game)},
       graphic_{std::make_shared<Graphic>()},
-      text_{std::make_unique<Text>(graphic_, data_->GetFont())} {}
+      text_{std::make_unique<Text>(graphic_, data_->GetFont())},
+      sound_{std::make_unique<Sound>()} {}
 
 Engine::~Engine() {
   SDL_Quit();
@@ -20,11 +22,20 @@ Engine::~Engine() {
 bool Engine::Run() {
   graphic_->InitializeWindow(data_->GetTitle());
 
+  std::string prev_sound{};
   for (auto& scene : data_->GetScenes()) {
     // render background
     graphic_->LoadBGTexture(scene.image);
     graphic_->LoadNameTexture(text_->GetNameSurface(scene.speaker, {0, 0, 255, 255}));
     graphic_->RenderBG();
+
+    // play music
+    if (scene.sound != prev_sound) {
+      sound_->UnLoad();
+      sound_->Load(scene.sound);
+      sound_->Play();
+      prev_sound = scene.sound;
+    }
 
     // show text
     text_->RenderText(scene.text);

@@ -5,6 +5,7 @@
 
 struct GameScene {
   std::string image;
+  std::string sound;
   std::string speaker;
   std::vector<std::string> text;
 };

@@ -5,6 +5,7 @@
         {
             "speaker": "Ella",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "I hope the rain stops soon. We can't stay here for long.",
                 "早く雨が止むと良いな。ずっとここにはいられないよ。"
@@ -13,6 +14,7 @@
         {
             "speaker": "Finn",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "Don't worry. We'll find a way out, like we always do.",
                 "心配しないで。いつものように、出口を見つけるよ。"
@@ -21,6 +23,7 @@
         {
             "speaker": "Ella",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "This rain feels different, like the forest is testing us.",
                 "この雨は違う気がする。森が私達を試しているみたい。"
@@ -29,6 +32,7 @@
         {
             "speaker": "Finn",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "Then let's show it our determination!",
                 "それなら僕らの決意を見せつけてやろうよ！"
@@ -37,6 +41,7 @@
         {
             "speaker": "Ella",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "Look, Finn! The rain is easing up!",
                 "見て、フィン！雨が弱まってきたよ！"
@@ -45,6 +50,7 @@
         {
             "speaker": "Finn",
             "image": "assets/images/rain.jpg",
+            "music" : "assets/sounds/sad.mp3",
             "text": [
                 "Great, let's wait a bit more.",
                 "良かった、もう少し待とう。"
@@ -53,6 +59,7 @@
         {
             "speaker": "Ella",
             "image": "assets/images/forest.jpg",
+            "music" : "assets/sounds/powerful.mp3",
             "text": [
                 "The sun is breaking through!",
                 "太陽が見える！"
@@ -61,6 +68,7 @@
         {
             "speaker": "Finn",
             "image": "assets/images/forest.jpg",
+            "music" : "assets/sounds/powerful.mp3",
             "text": [
                 "Time to continue our journey with gratitude.",
                 "感謝を胸に旅の再開といこうか。"
