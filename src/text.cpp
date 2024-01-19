@@ -3,8 +3,6 @@
 #include <string>
 #include <chrono>
 #include <thread>
-#include <codecvt>
-#include <locale>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -52,18 +50,30 @@ void Text::RenderText(const std::vector<std::string> texts) {
 
   std::thread th_rendering_text = std::thread([this, &texts, &fast_forward, &exit, &end_rendering] {
     std::vector<TextGraphic> data;
-
-    // With UTF-8 the size of each character will vary depending on the character.
-    // This makes it difficult to calculate the position of the next character.
-    // Using UTF-16 when counting the number of characters and using UTF-8 when rendering text is a good way to avoid this problem.
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cv;
-    int i = 0;
+    int line_num = 0;
     for (auto& text: texts) {
-      SDL_Surface* text_surface;
+      SDL_Surface* text_surface = nullptr;
       SDL_Rect text_rect;
+
+      // Append one character to the text line in each loop
       std::string text_tmp;
-      for (auto& c : cv.from_bytes(text)) {
-        text_tmp += cv.to_bytes(c);
+      for (size_t i = 0; i < text.size();) {
+        // Handle UTF-8
+        int size_of_char = 1;
+        if ((text[i] & 0xE0) == 0xC0) {
+          size_of_char = 2;
+        } else if ((text[i] & 0xF0) == 0xE0) {
+          size_of_char = 3;
+        } else if ((text[i] & 0xF8) == 0xF0) {
+          size_of_char = 4;
+        }
+        if (i + size_of_char > text.size()) {
+          break;
+        }
+
+        text_tmp.append(text.substr(i, size_of_char));
+        i += size_of_char;
+
         text_surface = TTF_RenderUTF8_Blended(font_, text_tmp.c_str(), color_);
         if (text_surface == nullptr) {
           std::cerr << "Failed to create text surface: " << SDL_GetError() << std::endl;
@@ -74,7 +84,7 @@ void Text::RenderText(const std::vector<std::string> texts) {
         // decide the text position
         text_rect = {
           graphic_->GetTextBoxRect().x + 30,
-          graphic_->GetTextBoxRect().y + 20 + text_surface->h * i,
+          graphic_->GetTextBoxRect().y + 20 + text_surface->h * line_num,
           text_surface->w,
           text_surface->h
         };
@@ -91,9 +101,10 @@ void Text::RenderText(const std::vector<std::string> texts) {
 
         if (exit) break;
       }
+
       if (exit) break;
       data.push_back({text_surface, text_rect});  // add an entire text line
-      ++i;
+      ++line_num;
     }
 
     for (auto& text : data) {
